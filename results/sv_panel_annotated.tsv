@@ -1,0 +1,15 @@
+id	chrom	start	end	svtype	size_bp	af_global	genes	consequences	top_impact
+DUP_gs_CNV_2_179674101_179709787	2	179674101	179709787	DUP	35686	0.00019968	CCDC141;RNU7-104P;TTN	3_prime_UTR_variant;5_prime_UTR_variant;coding_sequence_variant;intron_variant;non_coding_transcript_exon_variant;transcript_amplification;upstream_gene_variant	HIGH
+YL_CN_MSL_539	2	179684884	179833992	DEL	149108	0.00019968	CCDC141;RNU7-104P;TTN	3_prime_UTR_variant;5_prime_UTR_variant;coding_sequence_variant;feature_truncation;intron_variant;stop_lost;transcript_ablation	HIGH
+ALU_umary_ALU_1792	2	179609254	179609254	ALU	0	0.00439297	TTN;TTN-AS1	3_prime_UTR_variant;downstream_gene_variant;feature_elongation;intron_variant;non_coding_transcript_variant;upstream_gene_variant	HIGH
+BI_GS_CNV_2_179516678_179528763	2	179516678	179528763	DEL	12085	0.00698882	TTN;TTN-AS1	3_prime_UTR_variant;coding_sequence_variant;feature_truncation;intron_variant;non_coding_transcript_variant;stop_lost;upstream_gene_variant	HIGH
+L1_umary_LINE1_456	2	179489788	179489788	LINE1	0	0.00019968	TTN;TTN-AS1	downstream_gene_variant;intron_variant;non_coding_transcript_variant	MODIFIER
+DEL_pindel_18165	6	7560631	7560773	DEL	142	0.00019968	DSP	intron_variant;non_coding_transcript_variant	MODIFIER
+BI_GS_CNV_12_32956776_32970273	12	32956776	32970273	DEL	13497	0.00019968	PKP2	downstream_gene_variant;intron_variant;non_coding_transcript_variant	MODIFIER
+DUP_gs_CNV_6_7541771_7549189	6	7541771	7549189	DUP	7418	0.00079872	DSP;RP3-512B11.3	5_prime_UTR_variant;coding_sequence_variant;intron_variant;upstream_gene_variant	MODIFIER
+UW_VH_20325	10	112438454	112441973	DEL	3519	0.00079872	RBM20	intron_variant	MODIFIER
+ALU_umary_ALU_8233	10	112414352	112414352	ALU	0	0.00159744	RBM20	intron_variant	MODIFIER
+DEL_pindel_35944	12	32956917	32956967	DEL	50	0.00239617	PKP2	intron_variant;non_coding_transcript_variant	MODIFIER
+ALU_umary_ALU_9133	12	33016986	33016986	ALU	0	0.00259585	PKP2;RP11-8P13.1	downstream_gene_variant;intron_variant	MODIFIER
+ALU_umary_ALU_1791	2	179552134	179552134	ALU	0	0.0349441	TTN;TTN-AS1	intron_variant;non_coding_transcript_variant	MODIFIER
+DEL_pindel_35945	12	32963599	32963914	DEL_ALU	315	0.57488	PKP2	intron_variant;non_coding_transcript_variant	MODIFIER

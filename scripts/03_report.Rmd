@@ -1,0 +1,107 @@
+---
+title: "CNV dans un panel de gènes cardiaques — cohorte publique 1000 Genomes"
+author: "Romain KPAKOU"
+date: "`r format(Sys.Date(), '%d %B %Y')`"
+output:
+  html_document:
+    theme: flatly
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(knitr)
+```
+
+<style>
+table { border-collapse: collapse; width: 100%; font-size: 13px; }
+th, td { border: 1px solid #ddd; padding: 6px 10px; text-align: left; }
+th { background-color: #2A2A2A; color: #F0EBE0; }
+tr:nth-child(even) { background-color: #f7f5f2; }
+</style>
+
+## Contexte
+
+Ce rapport reprend, sur données publiques, la méthodologie d'une analyse de variants
+structuraux (CNV) initialement menée sur une cohorte clinique de 284 patients (prolapsus
+valvulaire mitral). **Les données patient originales ne sont ni publiées ni publiables**
+(secret médical, RGPD). L'analyse ci-dessous porte sur le callset public **1000 Genomes
+Project (Phase 3, GRCh37, 2 504 individus)**, restreint à un panel de 7 gènes associés aux
+cardiomyopathies et arythmies : *TTN*, *MYH7*, *LMNA*, *DSP*, *PKP2*, *RBM20*, *DES*.
+
+Voir [PLAN.md](../PLAN.md) et le [README](../README.md) pour le détail méthodologique complet.
+
+## Méthodologie (résumé)
+
+1. Panel de gènes construit à partir des coordonnées GRCh37 réelles (API Ensembl)
+2. Filtrage régional du callset SV public (`bedtools intersect`)
+3. Annotation fonctionnelle via l'**API REST Ensembl VEP** (GRCh37) — utilisée à la place
+   d'AnnotSV local pour ce dépôt, AnnotSV nécessitant une base d'annotation de plusieurs Go
+   disproportionnée ici pour 14 variants
+4. Priorisation par impact fonctionnel (VEP Sequence Ontology) puis par fréquence allélique
+   populationnelle (les variants les plus rares en tête)
+
+```{r load-data}
+df <- read_tsv("../results/sv_panel_annotated.tsv", show_col_types = FALSE)
+```
+
+## Vue d'ensemble
+
+`r nrow(df)` variants structuraux chevauchent le panel de 7 gènes, sur un total de 68 818
+variants dans le callset brut.
+
+```{r impact-plot, fig.width=6, fig.height=3.5}
+df %>%
+  count(top_impact) %>%
+  mutate(top_impact = factor(top_impact, levels = c("HIGH", "MODERATE", "LOW", "MODIFIER"))) %>%
+  ggplot(aes(x = top_impact, y = n, fill = top_impact)) +
+  geom_col(width = 0.6) +
+  scale_fill_manual(values = c(HIGH = "#B23A48", MODERATE = "#D4A574", LOW = "#4A7C7C", MODIFIER = "#9e8966")) +
+  labs(x = NULL, y = "Nombre de variants", title = "Répartition par impact fonctionnel (VEP)") +
+  theme_minimal(base_size = 12) +
+  theme(legend.position = "none")
+```
+
+## Variants priorisés
+
+Triés par impact fonctionnel décroissant, puis par fréquence allélique croissante (les
+variants rares et à fort impact en tête).
+
+```{r table}
+df %>%
+  select(id, chrom, start, end, svtype, size_bp, af_global, genes, top_impact, consequences) %>%
+  kable(
+    col.names = c("ID", "Chr", "Début", "Fin", "Type", "Taille (pb)", "AF global",
+                  "Gène(s)", "Impact", "Conséquences (VEP)"),
+    align = "l",
+    format = "html",
+    escape = TRUE
+  )
+```
+
+## Interprétation
+
+`r sum(df$top_impact == "HIGH")` variants sont annotés d'impact **HIGH** par VEP, tous
+localisés dans *TTN* (`feature_truncation`, `stop_lost`, `transcript_ablation`,
+`transcript_amplification`). *TTN* est le plus grand gène humain (~364 exons) et tolère un
+nombre élevé de variants structuraux en population générale sans conséquence pathogène
+établie — un impact VEP "HIGH" reflète l'effet prédit sur le transcrit, **pas** une
+pathogénicité clinique confirmée.
+
+## Limites
+
+- La cohorte 1000 Genomes est une **population générale**, pas des patients cardiopathes :
+  les CNV identifiés sont des variants de population, pas des variants pathogènes validés.
+- Aucune validation fonctionnelle ou clinique n'a été réalisée.
+- Ce dépôt démontre une **méthode reproductible de bout en bout**, pas un diagnostic.
+
+## Reproductibilité
+
+```bash
+./scripts/00_build_gene_panel.sh
+./scripts/01_filter_region.sh
+python3 scripts/02_annotate_vep.py
+Rscript -e "rmarkdown::render('scripts/03_report.Rmd')"
+```

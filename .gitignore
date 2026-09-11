@@ -1,0 +1,9 @@
+# Données brutes publiques (re-téléchargeables, voir README) — trop
+# volumineuses/inutiles à versionner
+data/raw/
+
+# Divers
+*.tmp
+*.log
+__pycache__/
+.DS_Store
