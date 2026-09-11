@@ -1,0 +1,3 @@
+# Résultats générés automatiquement -- exclus des statistiques de langage
+# GitHub (sinon le rapport HTML écrase Python/Shell dans le détecteur Linguist)
+results/* linguist-generated=true
