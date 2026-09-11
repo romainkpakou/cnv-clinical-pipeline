@@ -17,7 +17,7 @@ docker run --rm -v "$DATA:/data" "$BCFTOOLS_IMG" \
   bcftools stats /data/raw/sv_calls.vcf.gz | grep "^SN"
 
 echo "== Filtrage sur le panel de gènes (bedtools intersect) =="
-docker run --rm -v "$DATA:/data" -v "$RESULTS:/results" "$BEDTOOLS_IMG" \
+docker run --rm --user "$(id -u):$(id -g)" -v "$DATA:/data" -v "$RESULTS:/results" "$BEDTOOLS_IMG" \
   bash -c "bedtools intersect -a /data/raw/sv_calls.vcf.gz -b /data/gene_panel.bed -header > /results/sv_panel_filtered.vcf"
 
 n=$(grep -vc "^#" "$RESULTS/sv_panel_filtered.vcf")

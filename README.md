@@ -83,7 +83,7 @@ curl -sL -o data/raw/sv_calls.vcf.gz \
 python3 scripts/02_annotate_vep.py
 
 # 5. Générer le rapport
-docker run --rm -v "$(pwd):/proj" -w /proj/scripts rocker/tidyverse:4.3.1 \
+docker run --rm --user "$(id -u):$(id -g)" -v "$(pwd):/proj" -w /proj/scripts rocker/tidyverse:4.3.1 \
   Rscript -e "rmarkdown::render('03_report.Rmd')"
 mv scripts/03_report.html results/report.html
 ```
